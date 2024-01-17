@@ -8,4 +8,8 @@ const port = 8888;
 app.use("/releases", releasesRouter);
 app.use("/sneaker", sneakerRouter);
 
+app.get("/", (request, response) => {
+  response.status(200).send({ message: "This is the Sneakify API" });
+});
+
 app.listen(port, () => console.log(`Server running on port: ${port}`));
