@@ -12,6 +12,7 @@
   "author": "jarrenleo",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "lodash.groupby": "^4.6.0",
     "lodash.sortby": "^4.7.0"
