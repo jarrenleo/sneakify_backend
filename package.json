@@ -1,6 +1,6 @@
 {
   "name": "sneakify-api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Sneakify API",
   "type": "module",
   "main": "server.js",
