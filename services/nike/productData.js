@@ -98,7 +98,6 @@ export default class NikeProductData extends NikeUtilty {
       const releaseDateTime =
         productInfo.launchView?.startEntryDate ??
         productInfo.merchProduct.commerceStartDate;
-      // Add retailPrice and currentPrice
       const retailPrice = this.getPrice(
         +productInfo.merchPrice.fullPrice,
         country,
