@@ -78,7 +78,7 @@ export default class NikeProductData extends NikeUtilty {
     return `https://www.nike.com${countryPath}${launchPath}/t/${slug}`;
   }
 
-  async getProductData(sku, country, channel) {
+  async getProductData(channel, sku, country) {
     try {
       const language = this.languages[country];
       if (!language) throw Error("Country not found");

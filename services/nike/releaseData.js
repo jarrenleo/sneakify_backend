@@ -6,13 +6,13 @@ export default class NikeReleaseData extends NikeUtilty {
     super();
   }
 
-  async getReleaseData(country, channelName) {
+  async getReleaseData(country, channel) {
     try {
       const language = this.languages[country];
       if (!language) throw Error("Country not found");
 
       const releaseData = await fetchReleaseData(
-        `https://api.nike.com/product_feed/threads/v3/?count=100&filter=marketplace(${country})&filter=language(${language})&filter=upcoming(true)&filter=channelName(${channelName})&filter=productInfo.merchProduct.status(ACTIVE)&filter=exclusiveAccess(true,false)&sort=productInfo.merchProduct.commerceStartDateAsc`
+        `https://api.nike.com/product_feed/threads/v3/?count=100&filter=marketplace(${country})&filter=language(${language})&filter=upcoming(true)&filter=channelName(${channel})&filter=productInfo.merchProduct.status(ACTIVE)&filter=exclusiveAccess(true,false)&sort=productInfo.merchProduct.commerceStartDateAsc`
       );
 
       const upcomingProducts = [];
@@ -29,7 +29,7 @@ export default class NikeReleaseData extends NikeUtilty {
           if (productType !== "FOOTWEAR") continue;
 
           const sku = productInfo.merchProduct.styleColor;
-          const name = this.getName(channelName, sku, data.publishedContent);
+          const name = this.getName(channel, sku, data.publishedContent);
           const isPopular = this.checkIsPopular(name);
           const brand = productInfo.merchProduct.brand.toUpperCase();
           const price = this.getPrice(
@@ -44,7 +44,7 @@ export default class NikeReleaseData extends NikeUtilty {
           const imageUrl = this.getImageUrl(sku);
 
           upcomingProducts.push({
-            channelName,
+            channel,
             name,
             isPopular,
             brand,
