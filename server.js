@@ -12,7 +12,7 @@ app.use("/releases", releasesRouter);
 app.use("/product", productRouter);
 
 app.get("/", (request, response) => {
-  response.status(200).send({ message: "This is the Sneakify API" });
+  response.status(200).send({ message: "Welcome to the Sneakify API" });
 });
 
 app.listen(port, () => console.log(`Server running on port: ${port}`));
