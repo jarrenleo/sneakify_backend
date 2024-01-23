@@ -37,8 +37,8 @@ export default class NikeUtility {
     US: "en-US",
   };
 
-  getName(channelName, sku, publishedContent) {
-    if (channelName === "Nike.com") {
+  getName(channel, sku, publishedContent) {
+    if (channel === "Nike.com") {
       const title = publishedContent.properties.title;
       const subtitle = publishedContent.properties.subtitle;
 

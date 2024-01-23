@@ -16,6 +16,9 @@ router.get("/", async (request, response) => {
       nikeReleaseData.getReleaseData(country, "Nike.com"),
     ]);
 
+    if (snkrsData.status === "rejected") throw Error(snkrsData.reason);
+    if (webstoreData.status === "rejected") throw Error(webstoreData.reason);
+
     let data = [...snkrsData.value, ...webstoreData.value];
     data = sortBy(data, "unixTime");
 
