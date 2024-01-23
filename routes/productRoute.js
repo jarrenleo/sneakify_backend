@@ -10,7 +10,7 @@ router.get("/", async (request, response) => {
 
     if (!channel || !sku || !country) throw Error("Request validation failed");
 
-    const data = await nikeProductData.getProductData(sku, country, channel);
+    const data = await nikeProductData.getProductData(channel, sku, country);
 
     response.status(200).send(data);
   } catch (error) {
