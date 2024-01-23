@@ -9,7 +9,6 @@ export default class NikeReleaseData extends NikeUtilty {
   async getReleaseData(country, channel) {
     try {
       const language = this.languages[country];
-      console.log(language);
       if (!language) throw Error("Country not found");
 
       const releaseData = await fetchReleaseData(
