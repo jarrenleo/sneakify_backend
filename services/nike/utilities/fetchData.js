@@ -1,15 +1,25 @@
-export default async function fetchData(url, releaseData = []) {
+export async function fetchData(url) {
   try {
     const response = await fetch(url);
     const data = await response.json();
 
     if (!data.objects.length) throw Error("No upcoming releases");
 
-    releaseData.push(...data.objects);
+    return data;
+  } catch (error) {
+    throw Error(error.message);
+  }
+}
 
-    if (data.pages.next)
-      return await fetchData(
-        `https://api.nike.com${data.pages.next}`,
+export async function fetchReleaseData(url, releaseData = []) {
+  try {
+    const { pages, objects } = await fetchData(url);
+
+    releaseData.push(...objects);
+
+    if (pages.next)
+      return await fetchReleaseData(
+        `https://api.nike.com${pages.next}`,
         releaseData
       );
 
