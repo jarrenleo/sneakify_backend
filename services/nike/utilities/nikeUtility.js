@@ -83,18 +83,7 @@ export default class NikeUtility {
   }
 
   getPrice(price, country, currency) {
-    let locale;
-
-    switch (country) {
-      case "JP":
-        locale = "ja-JP";
-        break;
-      case "NL":
-        locale = "nl-NL";
-        break;
-      default:
-        locale = `en-${country}`;
-    }
+    const locale = this.locales[country];
 
     return new Intl.NumberFormat(locale, {
       style: "currency",
@@ -102,6 +91,26 @@ export default class NikeUtility {
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     }).format(price);
+  }
+
+  getReleaseDateTime(dateTimeObject, country, timeZone) {
+    const locale = this.locales[country];
+
+    const dateFormatter = new Intl.DateTimeFormat(locale, {
+      dateStyle: "long",
+      timeZone,
+    });
+
+    const timeFormatter = new Intl.DateTimeFormat(locale, {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone,
+    });
+
+    return [
+      dateFormatter.format(dateTimeObject),
+      timeFormatter.format(dateTimeObject).toUpperCase(),
+    ];
   }
 
   getImageUrl(sku) {

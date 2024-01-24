@@ -6,11 +6,17 @@ const router = express.Router();
 
 router.get("/", async (request, response) => {
   try {
-    const { channel, sku, country } = request.query;
+    const { channel, sku, country, timeZone } = request.query;
 
-    if (!channel || !sku || !country) throw Error("Request validation failed");
+    if (!channel || !sku || !country || !timeZone)
+      throw Error("Request validation failed");
 
-    const data = await nikeProductData.getProductData(channel, sku, country);
+    const data = await nikeProductData.getProductData(
+      channel,
+      sku,
+      country,
+      timeZone
+    );
 
     response.status(200).send(data);
   } catch (error) {

@@ -6,7 +6,7 @@ export default class NikeReleaseData extends NikeUtilty {
     super();
   }
 
-  async getReleaseData(country, channel) {
+  async getReleaseData(channel, country, timeZone) {
     try {
       const language = this.languages[country];
       if (!language) throw Error("Country not found");
@@ -37,10 +37,15 @@ export default class NikeReleaseData extends NikeUtilty {
             country,
             productInfo.merchPrice.currency
           );
-          const releaseDateTime =
+          const dateTimeObject = new Date(
             productInfo.launchView?.startEntryDate ||
-            productInfo.merchProduct.commerceStartDate;
-          const unixTime = Date.parse(releaseDateTime) / 1000;
+              productInfo.merchProduct.commerceStartDate
+          );
+          const [releaseDate, releaseTime] = this.getReleaseDateTime(
+            dateTimeObject,
+            country,
+            timeZone
+          );
           const imageUrl = this.getImageUrl(sku);
 
           upcomingProducts.push({
@@ -50,8 +55,9 @@ export default class NikeReleaseData extends NikeUtilty {
             brand,
             sku,
             price,
-            releaseDateTime,
-            unixTime,
+            releaseDate,
+            releaseTime,
+            dateTimeObject,
             imageUrl,
           });
         }

@@ -1,6 +1,7 @@
 import { fetchData } from "./utilities/fetchData.js";
 import NikeUtilty from "./utilities/nikeUtility.js";
 import { convert } from "html-to-text";
+import sortBy from "lodash.sortby";
 
 export default class NikeProductData extends NikeUtilty {
   constructor() {
@@ -48,7 +49,7 @@ export default class NikeProductData extends NikeUtilty {
   }
 
   getSizesAndStockLevels(skus, gtins) {
-    const sizesAndStockLevels = {};
+    const sizesAndStockLevels = [];
     if (!skus || !gtins) return sizesAndStockLevels;
 
     const gtinMap = new Map();
@@ -58,11 +59,12 @@ export default class NikeProductData extends NikeUtilty {
     }
 
     for (const sku of skus) {
-      const matchedGtin = gtinMap.get(sku.gtin);
+      const sizeAndStockLevel = { size: sku.nikeSize, stockLevel: "OOS" };
 
-      matchedGtin
-        ? (sizesAndStockLevels[sku.nikeSize] = matchedGtin.level)
-        : (sizesAndStockLevels[sku.nikeSize] = "OOS");
+      const matchedGtin = gtinMap.get(sku.gtin);
+      if (matchedGtin) sizeAndStockLevel.stockLevel = matchedGtin.level;
+
+      sizesAndStockLevels.push(sizeAndStockLevel);
     }
 
     return sizesAndStockLevels;
@@ -78,7 +80,7 @@ export default class NikeProductData extends NikeUtilty {
     return `https://www.nike.com${countryPath}${launchPath}/t/${slug}`;
   }
 
-  async getProductData(channel, sku, country) {
+  async getProductData(channel, sku, country, timeZone) {
     try {
       const language = this.languages[country];
       if (!language) throw Error("Country not found");
@@ -95,9 +97,15 @@ export default class NikeProductData extends NikeUtilty {
           ? objects[0].publishedContent.nodes[0].properties.body
           : productInfo.productContent.description;
       const description = this.getDescription(channel, productDescription);
-      const releaseDateTime =
+      const dateTimeObject = new Date(
         productInfo.launchView?.startEntryDate ??
-        productInfo.merchProduct.commerceStartDate;
+          productInfo.merchProduct.commerceStartDate
+      );
+      const [releaseDate, releaseTime] = this.getReleaseDateTime(
+        dateTimeObject,
+        country,
+        timeZone
+      );
       const retailPrice = this.getPrice(
         +productInfo.merchPrice.fullPrice,
         country,
@@ -115,7 +123,6 @@ export default class NikeProductData extends NikeUtilty {
         productInfo.skus,
         productInfo.availableGtins
       );
-      const lastUpdatedDateTime = objects[0].lastFetchTime;
       const productUrl = this.getProductUrl(
         channel,
         country,
@@ -127,7 +134,8 @@ export default class NikeProductData extends NikeUtilty {
         name,
         colour,
         description,
-        releaseDateTime,
+        releaseDate,
+        releaseTime,
         sku,
         retailPrice,
         currentPrice,
@@ -135,7 +143,6 @@ export default class NikeProductData extends NikeUtilty {
         method,
         quantity,
         sizesAndStockLevels,
-        lastUpdatedDateTime,
         productUrl,
         imageUrl,
       };

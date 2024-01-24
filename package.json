@@ -1,6 +1,6 @@
 {
   "name": "sneakify-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Sneakify API",
   "type": "module",
   "main": "server.js",
@@ -15,7 +15,9 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "html-to-text": "^9.0.5",
+    "lodash.groupby": "^4.6.0",
     "lodash.sortby": "^4.7.0",
+    "lodash.uniqby": "^4.7.0",
     "stockx-scraper": "^2.2.3"
   }
 }
