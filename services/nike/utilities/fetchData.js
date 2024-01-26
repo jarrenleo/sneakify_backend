@@ -3,7 +3,7 @@ export async function fetchData(url) {
     const response = await fetch(url);
     const data = await response.json();
 
-    if (!data.objects.length) throw Error("No upcoming releases");
+    if (!data.objects.length) throw Error("No products found");
 
     return data;
   } catch (error) {

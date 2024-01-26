@@ -21,18 +21,19 @@ export default class NikeReleaseData extends NikeUtilty {
         if (data.publishedContent.properties.custom.hideFromUpcoming?.length)
           continue;
 
-        const productInfos = data?.productInfo;
-        if (!productInfos.length) continue;
+        const productsInfo = data?.productInfo;
+        if (!productsInfo.length) continue;
 
-        for (const productInfo of productInfos) {
-          const productType = productInfo.merchProduct.productType;
-          if (productType !== "FOOTWEAR") continue;
+        for (const productInfo of productsInfo) {
+          if (productInfo.merchProduct.productType !== "FOOTWEAR") continue;
 
           const sku = productInfo.merchProduct.styleColor;
-          const name = this.getName(channel, sku, data.publishedContent);
+          const name =
+            this.getName(channel, country, sku, data.publishedContent) ||
+            productInfo.productContent.fullTitle;
           const isPopular = this.checkIsPopular(name);
           const brand = productInfo.merchProduct.brand.toUpperCase();
-          const price = this.getPrice(
+          const price = this.formatPrice(
             +productInfo.merchPrice.currentPrice,
             country,
             productInfo.merchPrice.currency
@@ -41,7 +42,7 @@ export default class NikeReleaseData extends NikeUtilty {
             productInfo.launchView?.startEntryDate ||
               productInfo.merchProduct.commerceStartDate
           );
-          const [releaseDate, releaseTime] = this.getReleaseDateTime(
+          const [releaseDate, releaseTime] = this.formatDateTime(
             dateTimeObject,
             country,
             timeZone

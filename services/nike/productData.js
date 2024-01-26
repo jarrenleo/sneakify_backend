@@ -1,7 +1,6 @@
 import { fetchData } from "./utilities/fetchData.js";
 import NikeUtilty from "./utilities/nikeUtility.js";
 import { convert } from "html-to-text";
-import sortBy from "lodash.sortby";
 
 export default class NikeProductData extends NikeUtilty {
   constructor() {
@@ -90,28 +89,30 @@ export default class NikeProductData extends NikeUtilty {
       );
 
       const productInfo = this.getProductInfo(objects[0].productInfo, sku);
-      const name = this.getName(channel, sku, objects[0].publishedContent);
-      const colour = productInfo.productContent.colorDescription ?? "-";
+      const name =
+        this.getName(channel, country, sku, objects[0].publishedContent) ||
+        productInfo.productContent.fullTitle;
+      const colour = productInfo.productContent.colorDescription || "-";
       const productDescription =
         channel === "SNKRS Web"
           ? objects[0].publishedContent.nodes[0].properties.body
           : productInfo.productContent.description;
       const description = this.getDescription(channel, productDescription);
       const dateTimeObject = new Date(
-        productInfo.launchView?.startEntryDate ??
+        productInfo.launchView?.startEntryDate ||
           productInfo.merchProduct.commerceStartDate
       );
-      const [releaseDate, releaseTime] = this.getReleaseDateTime(
+      const [releaseDate, releaseTime] = this.formatDateTime(
         dateTimeObject,
         country,
         timeZone
       );
-      const retailPrice = this.getPrice(
+      const retailPrice = this.formatPrice(
         +productInfo.merchPrice.fullPrice,
         country,
         productInfo.merchPrice.currency
       );
-      const currentPrice = this.getPrice(
+      const currentPrice = this.formatPrice(
         +productInfo.merchPrice.currentPrice,
         country,
         productInfo.merchPrice.currency
