@@ -8,7 +8,7 @@ router.get("/", async (request, response) => {
   try {
     const { q, country } = request.query;
 
-    if (!q) throw Error("Request validation failed");
+    if (!q || !country) throw Error("Request validation failed");
 
     const data = await videoData.getRelatedVideos(q, country);
 
