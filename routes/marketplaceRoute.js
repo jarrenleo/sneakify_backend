@@ -1,20 +1,30 @@
 import express from "express";
 import StockXPrice from "../services/stockx/priceData.js";
+import GoatPrice from "../services/goat/priceData.js";
+import SNKRDunkPrice from "../services/snkrdunk/priceData.js";
+import { locales } from "../utilities/settings.js";
 
 const stockx = new StockXPrice();
+const goat = new GoatPrice();
+const snkrdunk = new SNKRDunkPrice();
+
 const router = express.Router();
 
-router.get("/", async (request, response) => {
+router.get("/", async (request, response, next) => {
   try {
     const { sku, size, country } = request.query;
 
-    if (!sku || !size || !country) throw Error("Request validation failed");
+    if (!sku || !size || !country)
+      throw Error("Missing required query parameters");
+    if (!locales[country]) throw Error("Country not supported");
 
     const results = await Promise.allSettled([
       stockx.getPrices(sku, size, country),
+      goat.getPrices(sku, size, country),
+      snkrdunk.getPrices(sku, size, country),
     ]);
 
-    let data = [];
+    const data = [];
 
     for (const result of results) {
       if (result.status === "fulfilled") data.push(result.value);
@@ -22,9 +32,7 @@ router.get("/", async (request, response) => {
 
     response.status(200).send(data);
   } catch (error) {
-    response.status(400).send({
-      message: error.message,
-    });
+    next(error);
   }
 });
 

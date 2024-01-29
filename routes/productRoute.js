@@ -1,15 +1,17 @@
 import express from "express";
 import NikeProductData from "../services/nike/productData.js";
+import { locales } from "../utilities/settings.js";
 
 const nikeProductData = new NikeProductData();
 const router = express.Router();
 
-router.get("/", async (request, response) => {
+router.get("/", async (request, response, next) => {
   try {
     const { channel, sku, country, timeZone } = request.query;
 
     if (!channel || !sku || !country || !timeZone)
-      throw Error("Request validation failed");
+      throw Error("Missing required query parameters");
+    if (!locales[country]) throw Error("Country not supported");
 
     const data = await nikeProductData.getProductData(
       channel,
@@ -20,16 +22,7 @@ router.get("/", async (request, response) => {
 
     response.status(200).send(data);
   } catch (error) {
-    if (error.message === "Request validation failed") {
-      response.status(400).send({
-        message: error.message,
-      });
-      return;
-    }
-
-    response.status(404).send({
-      message: error.message,
-    });
+    next(error);
   }
 });
 

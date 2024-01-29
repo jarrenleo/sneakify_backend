@@ -1,4 +1,6 @@
-export default class NikeUtility {
+import { locales } from "../../../utilities/settings.js";
+
+export default class UtilityClass {
   popularKeywords = [
     "Dunk Low",
     "Jordan 1 Retro",
@@ -25,16 +27,6 @@ export default class NikeUtility {
     AU: "en-GB",
     CA: "en-GB",
     US: "en",
-  };
-  locales = {
-    SG: "en-SG",
-    MY: "en-MY",
-    JP: "ja-JP",
-    GB: "en-GB",
-    NL: "nl-NL",
-    AU: "en-AU",
-    CA: "en-CA",
-    US: "en-US",
   };
 
   getName(channel, country, sku, publishedContent) {
@@ -85,19 +77,8 @@ export default class NikeUtility {
     return false;
   }
 
-  formatPrice(price, country, currency) {
-    const locale = this.locales[country];
-
-    return new Intl.NumberFormat(locale, {
-      style: "currency",
-      currency,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    }).format(price);
-  }
-
   formatDateTime(dateTimeObject, country, timeZone) {
-    const locale = this.locales[country];
+    const locale = locales[country];
 
     const dateFormatter = new Intl.DateTimeFormat(locale, {
       dateStyle: "long",

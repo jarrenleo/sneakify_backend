@@ -17,6 +17,19 @@ app.use("/monitor", monitorRouter);
 app.use("/marketplace", marketplaceRouter);
 app.use("/video", videoRouter);
 
+app.use((error, request, response, next) => {
+  const errorMessage = {
+    message: error.message,
+  };
+
+  if (error.message === "Missing required query parameters") {
+    response.status(400).send(errorMessage);
+    return;
+  }
+
+  response.status(404).send(errorMessage);
+});
+
 app.get("/", (request, response) => {
   response.status(200).send({ message: "Welcome to the Sneakify API" });
 });

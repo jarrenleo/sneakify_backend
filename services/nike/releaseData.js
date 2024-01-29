@@ -1,7 +1,8 @@
 import { fetchReleaseData } from "./utilities/fetchData.js";
-import NikeUtilty from "./utilities/nikeUtility.js";
+import UtiltyClass from "./utilities/utilityClass.js";
+import { formatPrice } from "../../utilities/helpers.js";
 
-export default class NikeReleaseData extends NikeUtilty {
+export default class NikeReleaseData extends UtiltyClass {
   constructor() {
     super();
   }
@@ -33,7 +34,7 @@ export default class NikeReleaseData extends NikeUtilty {
             productInfo.productContent.fullTitle;
           const isPopular = this.checkIsPopular(name);
           const brand = productInfo.merchProduct.brand.toUpperCase();
-          const price = this.formatPrice(
+          const price = formatPrice(
             +productInfo.merchPrice.currentPrice,
             country,
             productInfo.merchPrice.currency

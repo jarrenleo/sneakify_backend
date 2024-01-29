@@ -1,8 +1,9 @@
 import { fetchData } from "./utilities/fetchData.js";
-import NikeUtilty from "./utilities/nikeUtility.js";
+import UtiltyClass from "./utilities/utilityClass.js";
+import { formatPrice } from "../../utilities/helpers.js";
 import { convert } from "html-to-text";
 
-export default class NikeProductData extends NikeUtilty {
+export default class NikeProductData extends UtiltyClass {
   constructor() {
     super();
   }
@@ -107,12 +108,12 @@ export default class NikeProductData extends NikeUtilty {
         country,
         timeZone
       );
-      const retailPrice = this.formatPrice(
+      const retailPrice = formatPrice(
         +productInfo.merchPrice.fullPrice,
         country,
         productInfo.merchPrice.currency
       );
-      const currentPrice = this.formatPrice(
+      const currentPrice = formatPrice(
         +productInfo.merchPrice.currentPrice,
         country,
         productInfo.merchPrice.currency
@@ -147,8 +148,8 @@ export default class NikeProductData extends NikeUtilty {
         productUrl,
         imageUrl,
       };
-    } catch (e) {
-      throw Error(e.message);
+    } catch (error) {
+      throw Error(error.message);
     }
   }
 }

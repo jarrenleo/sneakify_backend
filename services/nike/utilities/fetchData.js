@@ -1,6 +1,7 @@
 export async function fetchData(url) {
   try {
     const response = await fetch(url);
+    if (!response.ok) throw Error("Failed to fetch nike data");
     const data = await response.json();
 
     if (!data.objects.length) throw Error("No products found");
