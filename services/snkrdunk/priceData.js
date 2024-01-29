@@ -32,7 +32,9 @@ export default class SNKRDunkPrice {
 
       const lowestAskUSD = this.searchLowestAsk(sizesInfo, +size);
       if (lowestAskUSD) {
-        lowestAsk = await convertCurrency(currencies[country], lowestAskUSD);
+        lowestAsk = lowestAskUSD;
+        if (country !== "US")
+          lowestAsk = await convertCurrency(currencies[country], lowestAskUSD);
         payout = lowestAsk * ((100 - this.fees) / 100);
       }
     } catch (error) {
