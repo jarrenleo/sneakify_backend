@@ -34,7 +34,7 @@ export default class StockXPrice {
       const data = result[0];
       await data.fetch();
 
-      if (sku === data.sku) {
+      if (sku === data.sku.toUpperCase()) {
         const sizeInfo = this.searchSizeInfo(data.sizes, +size);
 
         if (sizeInfo) {
@@ -45,7 +45,6 @@ export default class StockXPrice {
         if (lowestAsk) payout = lowestAsk * ((100 - this.fees) / 100);
       }
     } catch (error) {
-      // Log to vercel
       throw Error(error.message);
     } finally {
       return {

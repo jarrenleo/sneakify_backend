@@ -29,7 +29,6 @@ export default class VideoData {
 
       return data;
     } catch (error) {
-      // Log to vercel
       throw Error(error.message);
     }
   }

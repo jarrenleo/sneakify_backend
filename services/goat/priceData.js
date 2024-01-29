@@ -118,7 +118,6 @@ export default class GoatPrice {
         payout: formatPrice(payout, country),
       };
     } catch (error) {
-      // Log to vercel
       throw Error(error.message);
     }
   }

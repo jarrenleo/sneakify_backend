@@ -24,6 +24,7 @@ router.get("/", async (request, response, next) => {
       snkrdunk.getPrices(sku, size, country),
     ]);
 
+    // Add logic to handle rejected promises
     const data = [];
 
     for (const result of results) {

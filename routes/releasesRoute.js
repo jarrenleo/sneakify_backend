@@ -20,7 +20,7 @@ router.get("/", async (request, response, next) => {
       nikeReleaseData.getReleaseData("Nike.com", country, timeZone),
     ]);
 
-    // Need to add additional logic to handle rejected promises
+    // Add logic to handle rejected promises
     let data = [];
 
     for (const result of results) {
