@@ -6,7 +6,7 @@ import { formatPrice } from "../../utilities/helpers.js";
 export default class SNKRDunkPrice {
   fees = 0;
 
-  searchLowestAsk(sizesInfo, size) {
+  searchSizeInfo(sizesInfo, size) {
     let l = 0;
     let r = sizesInfo.length - 1;
     let m;
@@ -15,7 +15,7 @@ export default class SNKRDunkPrice {
       m = Math.floor((l + r) / 2);
 
       const currentSize = +sizesInfo[m].size.text.slice(3);
-      if (currentSize === size) return sizesInfo[m].price;
+      if (currentSize === size) return sizesInfo[m];
 
       currentSize > size ? (r = m - 1) : (l = m + 1);
     }
@@ -30,11 +30,15 @@ export default class SNKRDunkPrice {
       const sizesInfo = await fetchData(sku);
       if (!sizesInfo.length) throw Error("Product not found");
 
-      const lowestAskUSD = this.searchLowestAsk(sizesInfo, +size);
-      if (lowestAskUSD) {
-        lowestAsk = lowestAskUSD;
+      const sizeInfo = this.searchSizeInfo(sizesInfo, +size);
+      if (sizeInfo) {
+        lowestAsk = sizeInfo.price;
         if (country !== "US")
-          lowestAsk = await convertCurrency(currencies[country], lowestAskUSD);
+          lowestAsk = await convertCurrency(
+            sizeInfo.currency,
+            currencies[country],
+            sizeInfo.price
+          );
         payout = lowestAsk * ((100 - this.fees) / 100);
       }
     } catch (error) {
