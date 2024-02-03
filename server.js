@@ -1,21 +1,21 @@
 import express from "express";
 import cors from "cors";
-import releasesRouter from "./routes/releasesRoute.js";
+import releaseRouter from "./routes/releaseRoute.js";
 import productRouter from "./routes/productRoute.js";
-import monitorRouter from "./routes/monitorRoute.js";
 import marketplaceRouter from "./routes/marketplaceRoute.js";
-import videoRouter from "./routes/videoRoute.js";
+import reviewRouter from "./routes/reviewRoute.js";
+import monitorRouter from "./routes/monitorRoute.js";
 
 const app = express();
 const port = 8888;
 
 app.use(cors());
 
-app.use("/releases", releasesRouter);
+app.use("/release", releaseRouter);
 app.use("/product", productRouter);
-app.use("/monitor", monitorRouter);
 app.use("/marketplace", marketplaceRouter);
-app.use("/video", videoRouter);
+app.use("/review", reviewRouter);
+app.use("/monitor", monitorRouter);
 
 app.use((error, request, response, next) => {
   const errorMessage = {

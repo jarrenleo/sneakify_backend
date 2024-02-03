@@ -10,8 +10,6 @@ export default class NikeReleaseData extends UtiltyClass {
   async getReleaseData(channel, country, timeZone) {
     try {
       const language = this.languages[country];
-      if (!language) throw Error("Country not found");
-
       const releaseData = await fetchReleaseData(
         `https://api.nike.com/product_feed/threads/v3/?count=100&filter=marketplace(${country})&filter=language(${language})&filter=upcoming(true)&filter=channelName(${channel})&filter=productInfo.merchProduct.status(ACTIVE)&filter=exclusiveAccess(true,false)&sort=productInfo.merchProduct.commerceStartDateAsc`
       );

@@ -10,8 +10,8 @@ router.get("/", async (request, response, next) => {
     const { channel, sku, country, timeZone } = request.query;
 
     if (!channel || !sku || !country || !timeZone)
-      throw Error("Missing required query parameters");
-    if (!locales[country]) throw Error("Country not supported");
+      throw new Error("Missing required query parameters");
+    if (!locales[country]) throw new Error("Country not supported");
 
     const data = await nikeProductData.getProductData(
       channel,

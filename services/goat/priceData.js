@@ -8,6 +8,8 @@ import { formatPrice } from "../../utilities/helpers.js";
 
 export default class GoatPrice {
   fees = 12.4;
+  baseUrl = "https://www.goat.com";
+  iconUrl = this.baseUrl + "/favicon.ico";
 
   searchLowestAsk(lowestAsks, size) {
     let l = 0;
@@ -78,6 +80,7 @@ export default class GoatPrice {
   async getPrices(sku, size, country) {
     try {
       let lowestAsk, highestBid, payout;
+      let productUrl = this.baseUrl + `/search?query=${sku}`;
 
       const searchResult = await fetchResults(sku);
       const matchedTerm = searchResult[0]?.matched_terms
@@ -107,6 +110,8 @@ export default class GoatPrice {
         }
 
         if (lowestAsk) payout = lowestAsk * ((100 - this.fees) / 100);
+
+        productUrl = this.baseUrl + `/sneakers/${searchResult[0].data.slug}`;
       }
 
       return {
@@ -116,6 +121,8 @@ export default class GoatPrice {
         highestBid: formatPrice(highestBid, country),
         fees: `${this.fees}%`,
         payout: formatPrice(payout, country),
+        iconUrl: this.iconUrl,
+        productUrl,
       };
     } catch (error) {
       throw Error(error.message);

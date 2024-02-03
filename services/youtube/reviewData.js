@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import { google } from "googleapis";
 config();
 
-export default class VideoData {
+export default class ReviewData {
   youtube = google.youtube({
     version: "v3",
     auth: process.env.YOUTUBE_API_KEY,

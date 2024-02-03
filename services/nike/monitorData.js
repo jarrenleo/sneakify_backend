@@ -20,7 +20,7 @@ export default class NikeMonitorData extends UtiltyClass {
   async getMonitorData(channel, country, timeZone) {
     try {
       const language = this.languages[country];
-      if (!language) throw Error("Country not found");
+      if (!language) throw new Error("Country not found");
 
       const { objects } = await fetchData(
         `https://api.nike.com/product_feed/threads/v3/?filter=marketplace(${country})&filter=language(${language})&filter=upcoming(false)&filter=channelName(${channel})&filter=productInfo.merchProduct.status(ACTIVE)&filter=exclusiveAccess(true,false)&sort=lastFetchTimeDesc`

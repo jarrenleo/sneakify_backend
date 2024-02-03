@@ -10,8 +10,9 @@ router.get("/", async (request, response, next) => {
   try {
     const { country, timeZone } = request.query;
 
-    if (!country || !timeZone) throw Error("Missing required query parameters");
-    if (!locales[country]) throw Error("Country not supported");
+    if (!country || !timeZone)
+      throw new Error("Missing required query parameters");
+    if (!locales[country]) throw new Error("Country not supported");
 
     const results = await Promise.allSettled([
       nikeMonitorData.getMonitorData("SNKRS Web", country, timeZone),

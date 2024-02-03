@@ -5,6 +5,9 @@ import { formatPrice } from "../../utilities/helpers.js";
 
 export default class SNKRDunkPrice {
   fees = 0;
+  baseUrl = "https://snkrdunk.com/en";
+  iconUrl =
+    "https://en-assets.snkrdunk.com/e78884508de531e/img/common/app-logo.png";
 
   searchSizeInfo(sizesInfo, size) {
     let l = 0;
@@ -25,10 +28,10 @@ export default class SNKRDunkPrice {
 
   async getPrices(sku, size, country) {
     let lowestAsk, payout;
-
+    let productUrl = this.baseUrl + `/search/result?keyword=${sku}`;
     try {
       const sizesInfo = await fetchData(sku);
-      if (!sizesInfo.length) throw Error("Product not found");
+      if (!sizesInfo.length) throw new Error("Product not found");
 
       const sizeInfo = this.searchSizeInfo(sizesInfo, +size);
       if (sizeInfo) {
@@ -39,8 +42,10 @@ export default class SNKRDunkPrice {
             currencies[country],
             sizeInfo.price
           );
+
         payout = lowestAsk * ((100 - this.fees) / 100);
       }
+      productUrl = this.baseUrl + `/sneakers/${sku}`;
     } catch (error) {
       throw Error(error.message);
     } finally {
@@ -51,6 +56,8 @@ export default class SNKRDunkPrice {
         highestBid: "-",
         fees: `${this.fees}%`,
         payout: formatPrice(payout, country),
+        iconUrl: this.iconUrl,
+        productUrl,
       };
     }
   }

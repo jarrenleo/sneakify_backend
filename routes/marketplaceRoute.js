@@ -15,8 +15,8 @@ router.get("/", async (request, response, next) => {
     const { sku, size, country } = request.query;
 
     if (!sku || !size || !country)
-      throw Error("Missing required query parameters");
-    if (!locales[country]) throw Error("Country not supported");
+      throw new Error("Missing required query parameters");
+    if (!locales[country]) throw new Error("Country not supported");
 
     const results = await Promise.allSettled([
       stockx.getPrices(sku, size, country),

@@ -4,6 +4,7 @@ import { formatPrice } from "../../utilities/helpers.js";
 
 export default class StockXPrice {
   fees = 12;
+  iconUrl = "https://web-assets.stockx.com/static/logo/favicon.ico";
 
   searchSizeInfo(sizesInfo, size) {
     let l = 0;
@@ -22,6 +23,8 @@ export default class StockXPrice {
 
   async getPrices(sku, size, country) {
     let lowestAsk, highestBid, payout;
+    let productUrl = `https://stockx.com/search?s=${sku}`;
+
     try {
       const client = new StockxClient({
         currencyCode: currencies[country],
@@ -32,9 +35,12 @@ export default class StockXPrice {
       });
 
       const data = result[0];
+
+      if (sku === data.sku) productUrl = data.url;
+
       await data.fetch();
 
-      if (sku === data.sku.toUpperCase()) {
+      if (sku === data.sku) {
         const sizeInfo = this.searchSizeInfo(data.sizes, +size);
 
         if (sizeInfo) {
@@ -43,6 +49,8 @@ export default class StockXPrice {
         }
 
         if (lowestAsk) payout = lowestAsk * ((100 - this.fees) / 100);
+
+        productUrl = data.url;
       }
     } catch (error) {
       throw Error(error.message);
@@ -54,6 +62,8 @@ export default class StockXPrice {
         highestBid: formatPrice(highestBid, country),
         fees: `${this.fees}%`,
         payout: formatPrice(payout, country),
+        iconUrl: this.iconUrl,
+        productUrl,
       };
     }
   }
