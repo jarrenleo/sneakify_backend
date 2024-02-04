@@ -1,5 +1,12 @@
 import { locales, currencies } from "./settings.js";
 
+export function filterSize(size) {
+  const hasAlphabet = /[A-Za-z]/.test(size);
+
+  if (!hasAlphabet) return size;
+  return size.slice(0, -1);
+}
+
 export function formatPrice(price, country) {
   if (!price) return "-";
 

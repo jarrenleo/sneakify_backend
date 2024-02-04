@@ -1,6 +1,6 @@
 import { fetchResults, fetchSizes } from "./utilities/fetchData.js";
 import { currencies } from "../../utilities/settings.js";
-import { formatPrice } from "../../utilities/helpers.js";
+import { filterSize, formatPrice } from "../../utilities/helpers.js";
 
 export default class GoatPrice {
   fees = 12.4;
@@ -102,6 +102,7 @@ export default class GoatPrice {
         );
 
         if (sizesInfo.length) {
+          size = filterSize(size);
           const [lowestAskValue, lastSaleValue] =
             this.searchLowestAskAndLastSale(sizesInfo, +size);
 
@@ -118,7 +119,6 @@ export default class GoatPrice {
     } finally {
       return {
         marketplace: "Goat",
-        size,
         lowestAsk: formatPrice(lowestAsk, country),
         lastSale: formatPrice(lastSale, country),
         fees: `${this.fees}%`,

@@ -40,7 +40,6 @@ export default class StockXPrice {
         productUrl = data.url;
 
         await data.fetch();
-        console.log(data);
 
         const sizeInfo = this.searchSizeInfo(data.sizes, +size);
 
@@ -52,7 +51,6 @@ export default class StockXPrice {
     } finally {
       return {
         marketplace: "StockX",
-        size,
         lowestAsk: formatPrice(lowestAsk, country),
         lastSale: "-",
         fees: `${this.fees}%`,

@@ -1,7 +1,7 @@
 import { fetchData } from "./utilities/fetchData.js";
 import { convertCurrency } from "./utilities/convertCurrency.js";
 import { currencies } from "../../utilities/settings.js";
-import { formatPrice } from "../../utilities/helpers.js";
+import { filterSize, formatPrice } from "../../utilities/helpers.js";
 
 export default class SNKRDunkPrice {
   fees = 0;
@@ -17,7 +17,7 @@ export default class SNKRDunkPrice {
     while (l <= r) {
       m = Math.floor((l + r) / 2);
 
-      const currentSize = +sizesInfo[m].size.text.slice(3);
+      const currentSize = +filterSize(sizesInfo[m].size.text.slice(3));
       if (currentSize === size) return sizesInfo[m];
 
       currentSize > size ? (r = m - 1) : (l = m + 1);
@@ -33,9 +33,11 @@ export default class SNKRDunkPrice {
       const sizesInfo = await fetchData(sku);
       if (!sizesInfo.length) throw new Error("Product not found");
 
+      size = filterSize(size);
       const sizeInfo = this.searchSizeInfo(sizesInfo, +size);
-      if (sizeInfo) {
+      if (sizeInfo && sizeInfo.price) {
         lowestAsk = sizeInfo.price;
+
         if (country !== "US")
           lowestAsk = await convertCurrency(
             sizeInfo.currency,
@@ -51,7 +53,6 @@ export default class SNKRDunkPrice {
     } finally {
       return {
         marketplace: "SNKRDunk",
-        size,
         lowestAsk: formatPrice(lowestAsk, country),
         lastSale: "-",
         fees: `${this.fees}%`,
