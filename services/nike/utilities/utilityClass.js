@@ -4,6 +4,7 @@ export default class UtilityClass {
   popularKeywords = [
     "Dunk Low",
     "Jordan 1 Retro",
+    "Jordan 1 High",
     "Jordan 1 Low",
     "Jordan 4",
     "Kobe",

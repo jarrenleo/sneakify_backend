@@ -17,7 +17,7 @@ export async function fetchResults(query) {
   }
 }
 
-export async function fetchLowestAsks(productTemplateId, country, currency) {
+export async function fetchSizes(productTemplateId, country, currency) {
   try {
     const response = await fetch(
       `https://www.goat.com/web-api/v1/product_variants/buy_bar_data?productTemplateId=${productTemplateId}&countryCode=${country}`,
@@ -27,26 +27,7 @@ export async function fetchLowestAsks(productTemplateId, country, currency) {
         },
       }
     );
-    if (!response.ok) throw new Error("Failed to fetch lowest ask from goat");
-    const data = await response.json();
-
-    return data;
-  } catch (error) {
-    throw Error(error.message);
-  }
-}
-
-export async function fetchHighestBids(productTemplateId, country, currency) {
-  try {
-    const response = await fetch(
-      `https://www.goat.com/web-api/v1/highest_offers?productTemplateId=${productTemplateId}&countryCode=${country}`,
-      {
-        headers: {
-          Cookie: `currency=${currency}`,
-        },
-      }
-    );
-    if (!response.ok) throw new Error("Failed to fetch highest bid from goat");
+    if (!response.ok) throw new Error("Failed to fetch sizes from goat");
     const data = await response.json();
 
     return data;

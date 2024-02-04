@@ -7,21 +7,9 @@ export default class NikeMonitorData extends UtiltyClass {
     super();
   }
 
-  getProductUrl(channel, country, slug) {
-    let countryPath = "",
-      launchPath = "";
-
-    if (country !== "US") countryPath = `/${country.toLowerCase()}`;
-    if (channel === "SNKRS Web") launchPath = "/launch";
-
-    return `https://www.nike.com${countryPath}${launchPath}/t/${slug}`;
-  }
-
   async getMonitorData(channel, country, timeZone) {
     try {
       const language = this.languages[country];
-      if (!language) throw new Error("Country not found");
-
       const { objects } = await fetchData(
         `https://api.nike.com/product_feed/threads/v3/?filter=marketplace(${country})&filter=language(${language})&filter=upcoming(false)&filter=channelName(${channel})&filter=productInfo.merchProduct.status(ACTIVE)&filter=exclusiveAccess(true,false)&sort=lastFetchTimeDesc`
       );
@@ -34,7 +22,7 @@ export default class NikeMonitorData extends UtiltyClass {
         if (!productsInfo.length) continue;
 
         for (const productInfo of productsInfo) {
-          if (productCount >= 30) break;
+          if (productCount >= 25) break;
           if (productInfo.merchProduct.productType !== "FOOTWEAR") continue;
 
           const sku = productInfo.merchProduct.styleColor;
@@ -42,22 +30,16 @@ export default class NikeMonitorData extends UtiltyClass {
             this.getName(channel, country, sku, data.publishedContent) ||
             productInfo.productContent.fullTitle;
           const isPopular = this.checkIsPopular(name);
-          const brand = productInfo.merchProduct.brand.toUpperCase();
           const price = formatPrice(
             +productInfo.merchPrice.currentPrice,
             country,
             productInfo.merchPrice.currency
           );
           const dateTimeObject = new Date(data.lastFetchTime);
-          const [lastFetchDate, lastFetchTime] = this.formatDateTime(
+          const [_, lastFetchTime] = this.formatDateTime(
             dateTimeObject,
             country,
             timeZone
-          );
-          const productUrl = this.getProductUrl(
-            channel,
-            country,
-            data.publishedContent.properties.seo.slug
           );
           const imageUrl = this.getImageUrl(sku);
 
@@ -65,13 +47,10 @@ export default class NikeMonitorData extends UtiltyClass {
             channel,
             name,
             isPopular,
-            brand,
             sku,
             price,
-            lastFetchDate,
             lastFetchTime,
             dateTimeObject,
-            productUrl,
             imageUrl,
           });
 

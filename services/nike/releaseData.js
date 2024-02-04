@@ -31,7 +31,6 @@ export default class NikeReleaseData extends UtiltyClass {
             this.getName(channel, country, sku, data.publishedContent) ||
             productInfo.productContent.fullTitle;
           const isPopular = this.checkIsPopular(name);
-          const brand = productInfo.merchProduct.brand.toUpperCase();
           const price = formatPrice(
             +productInfo.merchPrice.currentPrice,
             country,
@@ -52,7 +51,6 @@ export default class NikeReleaseData extends UtiltyClass {
             channel,
             name,
             isPopular,
-            brand,
             sku,
             price,
             releaseDate,

@@ -53,7 +53,7 @@ export default class SNKRDunkPrice {
         marketplace: "SNKRDunk",
         size,
         lowestAsk: formatPrice(lowestAsk, country),
-        highestBid: "-",
+        lastSale: "-",
         fees: `${this.fees}%`,
         payout: formatPrice(payout, country),
         iconUrl: this.iconUrl,

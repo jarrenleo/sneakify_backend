@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import releaseRouter from "./routes/releaseRoute.js";
 import productRouter from "./routes/productRoute.js";
-import marketplaceRouter from "./routes/marketplaceRoute.js";
+import resaleRouter from "./routes/resaleRoute.js";
 import reviewRouter from "./routes/reviewRoute.js";
 import monitorRouter from "./routes/monitorRoute.js";
 
@@ -13,7 +13,7 @@ app.use(cors());
 
 app.use("/release", releaseRouter);
 app.use("/product", productRouter);
-app.use("/marketplace", marketplaceRouter);
+app.use("/resale", resaleRouter);
 app.use("/review", reviewRouter);
 app.use("/monitor", monitorRouter);
 

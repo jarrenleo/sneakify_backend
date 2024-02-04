@@ -1,8 +1,4 @@
-import {
-  fetchResults,
-  fetchLowestAsks,
-  fetchHighestBids,
-} from "./utilities/fetchData.js";
+import { fetchResults, fetchSizes } from "./utilities/fetchData.js";
 import { currencies } from "../../utilities/settings.js";
 import { formatPrice } from "../../utilities/helpers.js";
 
@@ -11,9 +7,9 @@ export default class GoatPrice {
   baseUrl = "https://www.goat.com";
   iconUrl = this.baseUrl + "/favicon.ico";
 
-  searchLowestAsk(lowestAsks, size) {
+  searchLowestAskAndLastSale(sizesInfo, size) {
     let l = 0;
-    let r = lowestAsks.length - 1;
+    let r = sizesInfo.length - 1;
     let m;
 
     function isMatchingSize(sizeInfo) {
@@ -31,30 +27,39 @@ export default class GoatPrice {
     while (l <= r) {
       m = Math.floor((l + r) / 2);
 
-      if (isMatchingSize(lowestAsks[m])) {
-        if (isNewAndInStock(lowestAsks[m]))
-          return lowestAsks[m].lowestPriceCents.amount / 100;
+      if (isMatchingSize(sizesInfo[m])) {
+        if (isNewAndInStock(sizesInfo[m]))
+          return [
+            sizesInfo[m].lowestPriceCents.amount / 100,
+            sizesInfo[m].lastSoldPriceCents.amount / 100,
+          ];
 
         let i = m - 1;
 
-        while (isMatchingSize(lowestAsks[i])) {
-          if (isNewAndInStock(lowestAsks[i]))
-            return lowestAsks[i].lowestPriceCents.amount / 100;
+        while (isMatchingSize(sizesInfo[i])) {
+          if (isNewAndInStock(sizesInfo[i]))
+            return [
+              sizesInfo[i].lowestPriceCents.amount / 100,
+              sizesInfo[i].lastSoldPriceCents.amount / 100,
+            ];
           --i;
         }
 
         i = m + 1;
 
-        while (isMatchingSize(lowestAsks[i])) {
-          if (isNewAndInStock(lowestAsks[i]))
-            return lowestAsks[i].lowestPriceCents.amount / 100;
+        while (isMatchingSize(sizesInfo[i])) {
+          if (isNewAndInStock(sizesInfo[i]))
+            return [
+              sizesInfo[i].lowestPriceCents.amount / 100,
+              sizesInfo[i].lastSoldPriceCents.amount / 100,
+            ];
           ++i;
         }
 
         return null;
       }
 
-      lowestAsks[m].sizeOption.value > size ? (r = m - 1) : (l = m + 1);
+      sizesInfo[m].sizeOption.value > size ? (r = m - 1) : (l = m + 1);
     }
 
     return null;
@@ -78,10 +83,9 @@ export default class GoatPrice {
   }
 
   async getPrices(sku, size, country) {
+    let lowestAsk, lastSale, payout;
+    let productUrl = this.baseUrl + `/search?query=${sku}`;
     try {
-      let lowestAsk, highestBid, payout;
-      let productUrl = this.baseUrl + `/search?query=${sku}`;
-
       const searchResult = await fetchResults(sku);
       const matchedTerm = searchResult[0]?.matched_terms
         .join("-")
@@ -91,41 +95,37 @@ export default class GoatPrice {
         const productTemplateId = searchResult[0].data.id;
         const currency = currencies[country];
 
-        const [lowestAsks, highestBids] = await Promise.allSettled([
-          fetchLowestAsks(productTemplateId, country, currency),
-          fetchHighestBids(productTemplateId, country, currency),
-        ]);
+        const sizesInfo = await fetchSizes(
+          productTemplateId,
+          country,
+          currency
+        );
 
-        if (lowestAsks.status === "fulfilled" && lowestAsks.value.length) {
-          const lowestAskValue = this.searchLowestAsk(lowestAsks.value, +size);
-          if (lowestAskValue) lowestAsk = lowestAskValue;
+        if (sizesInfo.length) {
+          const [lowestAskValue, lastSaleValue] =
+            this.searchLowestAskAndLastSale(sizesInfo, +size);
+
+          if (lowestAskValue) {
+            lowestAsk = lowestAskValue;
+            payout = lowestAskValue * ((100 - this.fees) / 100);
+          }
+          if (lastSaleValue) lastSale = lastSaleValue;
         }
-
-        if (highestBids.status === "fulfilled" && highestBids.value.length) {
-          const highestBidValue = this.searchHighestBid(
-            highestBids.value,
-            +size
-          );
-          if (highestBidValue) highestBid = highestBidValue;
-        }
-
-        if (lowestAsk) payout = lowestAsk * ((100 - this.fees) / 100);
-
         productUrl = this.baseUrl + `/sneakers/${searchResult[0].data.slug}`;
       }
-
+    } catch (error) {
+      throw Error(error.message);
+    } finally {
       return {
         marketplace: "Goat",
         size,
         lowestAsk: formatPrice(lowestAsk, country),
-        highestBid: formatPrice(highestBid, country),
+        lastSale: formatPrice(lastSale, country),
         fees: `${this.fees}%`,
         payout: formatPrice(payout, country),
         iconUrl: this.iconUrl,
         productUrl,
       };
-    } catch (error) {
-      throw Error(error.message);
     }
   }
 }

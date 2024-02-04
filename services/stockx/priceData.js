@@ -22,7 +22,7 @@ export default class StockXPrice {
   }
 
   async getPrices(sku, size, country) {
-    let lowestAsk, highestBid, payout;
+    let lowestAsk, payout;
     let productUrl = `https://stockx.com/search?s=${sku}`;
 
     try {
@@ -36,21 +36,16 @@ export default class StockXPrice {
 
       const data = result[0];
 
-      if (sku === data.sku) productUrl = data.url;
+      if (sku === data.sku.toUpperCase()) {
+        productUrl = data.url;
 
-      await data.fetch();
+        await data.fetch();
+        console.log(data);
 
-      if (sku === data.sku) {
         const sizeInfo = this.searchSizeInfo(data.sizes, +size);
 
-        if (sizeInfo) {
-          lowestAsk = sizeInfo.lowestAsk;
-          highestBid = sizeInfo.highestBid;
-        }
-
+        if (sizeInfo) lowestAsk = sizeInfo.lowestAsk;
         if (lowestAsk) payout = lowestAsk * ((100 - this.fees) / 100);
-
-        productUrl = data.url;
       }
     } catch (error) {
       throw Error(error.message);
@@ -59,7 +54,7 @@ export default class StockXPrice {
         marketplace: "StockX",
         size,
         lowestAsk: formatPrice(lowestAsk, country),
-        highestBid: formatPrice(highestBid, country),
+        lastSale: "-",
         fees: `${this.fees}%`,
         payout: formatPrice(payout, country),
         iconUrl: this.iconUrl,

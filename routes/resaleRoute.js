@@ -18,18 +18,14 @@ router.get("/", async (request, response, next) => {
       throw new Error("Missing required query parameters");
     if (!locales[country]) throw new Error("Country not supported");
 
-    const results = await Promise.allSettled([
-      stockx.getPrices(sku, size, country),
-      goat.getPrices(sku, size, country),
-      snkrdunk.getPrices(sku, size, country),
-    ]);
-
-    // Add logic to handle rejected promises
-    const data = [];
-
-    for (const result of results) {
-      if (result.status === "fulfilled") data.push(result.value);
-    }
+    const [stockxPrices, goatPrices, snkrdunkPrices] = await Promise.allSettled(
+      [
+        stockx.getPrices(sku, size, country),
+        goat.getPrices(sku, size, country),
+        snkrdunk.getPrices(sku, size, country),
+      ]
+    );
+    const data = [stockxPrices.value, goatPrices.value, snkrdunkPrices.value];
 
     response.status(200).send(data);
   } catch (error) {
