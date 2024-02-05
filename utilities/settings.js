@@ -11,7 +11,7 @@ export const locales = {
 
 export const currencies = {
   SG: "SGD",
-  MY: "USD",
+  MY: "MYR",
   JP: "JPY",
   GB: "GBP",
   NL: "EUR",
