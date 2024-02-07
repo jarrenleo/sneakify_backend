@@ -29,7 +29,7 @@ export default class NikeMonitorData extends UtiltyClass {
           const name =
             this.getName(channel, country, sku, data.publishedContent) ||
             productInfo.productContent.fullTitle;
-          const isPopular = this.checkIsPopular(name);
+          const isPopular = this.checkIsPopular(country, name);
           const price = formatPrice(
             +productInfo.merchPrice.currentPrice,
             country,

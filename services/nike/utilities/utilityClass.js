@@ -19,6 +19,14 @@ export default class UtilityClass {
     "CMFT",
     "Golf",
   ];
+  popularKeywordsJP = [
+    "ダンク LOW",
+    "ジョーダン 1 レトロ",
+    "ジョーダン 1 LOW",
+    "ジョーダン 4",
+    "コービー",
+  ];
+  unpopularKeywordsJP = ["ジュニア", "リトル", "ベビー", "ジャンボ", "ゴルフ"];
   languages = {
     SG: "en-GB",
     MY: "en-GB",
@@ -66,11 +74,16 @@ export default class UtilityClass {
     }
   }
 
-  checkIsPopular(name) {
-    for (const popularKeyword of this.popularKeywords) {
+  checkIsPopular(country, name) {
+    const popularKeywords =
+      country !== "JP" ? this.popularKeywords : this.popularKeywordsJP;
+    const unpopularKeywords =
+      country !== "JP" ? this.unpopularKeywords : this.unpopularKeywordsJP;
+
+    for (const popularKeyword of popularKeywords) {
       if (!name.includes(popularKeyword)) continue;
 
-      for (const unpopularKeyword of this.unpopularKeywords) {
+      for (const unpopularKeyword of unpopularKeywords) {
         if (name.includes(unpopularKeyword)) return false;
       }
       return true;
