@@ -14,16 +14,11 @@ router.get("/", async (request, response, next) => {
       throw new Error("Missing required query parameters");
     if (!locales[country]) throw new Error("Country not supported");
 
-    const results = await Promise.allSettled([
-      nikeMonitorData.getMonitorData("SNKRS Web", country, timeZone),
-      nikeMonitorData.getMonitorData("Nike.com", country, timeZone),
-    ]);
-
-    let data = [];
-
-    for (const result of results) {
-      if (result.status === "fulfilled") data.push(...result.value);
-    }
+    let data = await nikeMonitorData.getMonitorData(
+      "Nike.com",
+      country,
+      timeZone
+    );
 
     data = orderBy(data, ["dateTimeObject"], ["desc"]);
 

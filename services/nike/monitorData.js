@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { fetchData } from "./utilities/fetchData.js";
 import UtiltyClass from "./utilities/utilityClass.js";
 import { formatPrice } from "../../utilities/helpers.js";
@@ -14,7 +15,6 @@ export default class NikeMonitorData extends UtiltyClass {
         `https://api.nike.com/product_feed/threads/v3/?filter=marketplace(${country})&filter=language(${language})&filter=upcoming(false)&filter=channelName(${channel})&filter=productInfo.merchProduct.status(ACTIVE)&filter=exclusiveAccess(true,false)&sort=lastFetchTimeDesc`
       );
 
-      let productCount = 0;
       const restockProducts = [];
 
       for (const data of objects) {
@@ -22,9 +22,9 @@ export default class NikeMonitorData extends UtiltyClass {
         if (!productsInfo.length) continue;
 
         for (const productInfo of productsInfo) {
-          if (productCount >= 25) break;
           if (productInfo.merchProduct.productType !== "FOOTWEAR") continue;
 
+          const uuid = randomUUID();
           const sku = productInfo.merchProduct.styleColor;
           const name =
             this.getName(channel, country, sku, data.publishedContent) ||
@@ -44,6 +44,7 @@ export default class NikeMonitorData extends UtiltyClass {
           const imageUrl = this.getImageUrl(sku);
 
           restockProducts.push({
+            uuid,
             channel,
             name,
             isPopular,
@@ -53,8 +54,6 @@ export default class NikeMonitorData extends UtiltyClass {
             dateTimeObject,
             imageUrl,
           });
-
-          productCount++;
         }
       }
 

@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { fetchReleaseData } from "./utilities/fetchData.js";
 import UtiltyClass from "./utilities/utilityClass.js";
 import { formatPrice } from "../../utilities/helpers.js";
@@ -26,6 +27,7 @@ export default class NikeReleaseData extends UtiltyClass {
         for (const productInfo of productsInfo) {
           if (productInfo.merchProduct.productType !== "FOOTWEAR") continue;
 
+          const uuid = randomUUID();
           const sku = productInfo.merchProduct.styleColor;
           const name =
             this.getName(channel, country, sku, data.publishedContent) ||
@@ -48,6 +50,7 @@ export default class NikeReleaseData extends UtiltyClass {
           const imageUrl = this.getImageUrl(sku);
 
           upcomingProducts.push({
+            uuid,
             channel,
             name,
             isPopular,
