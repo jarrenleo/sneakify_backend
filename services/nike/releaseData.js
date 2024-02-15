@@ -3,11 +3,26 @@ import { fetchReleaseData } from "./utilities/fetchData.js";
 import UtiltyClass from "./utilities/utilityClass.js";
 import { formatPrice } from "../../utilities/helpers.js";
 
+/**
+ * Class responsible for fetching and processing release data from the Nike API.
+ * It extends functionality from the Nike UtilityClass.
+ * @class
+ */
 export default class NikeReleaseData extends UtiltyClass {
   constructor() {
     super();
   }
 
+  /**
+   * Retrieves release data from the Nike API and processes the data for use.
+   * @async
+   * @function getReleaseData
+   * @param {string} channel - The channel name for which to fetch the product data (e.g. 'SNKRS Web').
+   * @param {string} country - The country code (e.g. 'SG') used for API query and formatting.
+   * @param {string} timeZone - The time zone identifier used for time-related formatting.
+   * @returns {Promise<Object[]>} A promise that resolves to an array of objects containing processed and formatted release data.
+   * @throws {Error} Throws an error if fetching the release data fails.
+   */
   async getReleaseData(channel, country, timeZone) {
     try {
       const language = this.languages[country];

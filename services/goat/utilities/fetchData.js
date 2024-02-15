@@ -1,6 +1,14 @@
 import { config } from "dotenv";
 config();
 
+/**
+ * Fetches autocomplete search results from the Goat search API.
+ * @async
+ * @function fetchResults
+ * @param {string} query - The search query string.
+ * @returns {Promise<Object[]>} A promise that resolves with an array of objects containing the search results data.
+ * @throws {Error} Throws an error if the fetch operation fails or if the API responds with an error status.
+ */
 export async function fetchResults(query) {
   try {
     const currentUnixTime = Date.parse(new Date());
@@ -17,6 +25,16 @@ export async function fetchResults(query) {
   }
 }
 
+/**
+ * Fetches available sizes and prices for a specific product from the Goat API.
+ * @async
+ * @function fetchSizes
+ * @param {string} productTemplateId - The product template ID for which product to fetch sizes.
+ * @param {string} country - The country code for localisation.
+ * @param {string} currency - The currency in which prices should be displayed.
+ * @returns {Promise<Object[]>} A promise that resolves with an array of objects containing the price data for a specified product.
+ * @throws {Error} Throws an error if the fetch operation fails or if the API responds with an error status.
+ */
 export async function fetchSizes(productTemplateId, country, currency) {
   try {
     const response = await fetch(

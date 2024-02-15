@@ -4,9 +4,37 @@ import { locales } from "../utilities/settings.js";
 import sortBy from "lodash.sortby";
 import uniqBy from "lodash.uniqby";
 
+/** Creates an instance of the NikeReleaseData class to interact with Nike release data. */
 const nikeReleaseData = new NikeReleaseData();
 const router = express.Router();
 
+/**
+ * @typedef errorMessage
+ * @property {string} message - The error message.
+ */
+
+/**
+ * @typedef releaseData
+ * @property {string} uuid - The product unique identifier.
+ * @property {string} channel - The product channel.
+ * @property {string} name - The product name.
+ * @property {boolean} isPopular - Indicate if a product is popular
+ * @property {string} sku - The product stock keeping unit.
+ * @property {string} price - The product price.
+ * @property {string} releaseDate - The product release date.
+ * @property {string} releaseTime - The product release time.
+ * @property {Date} dateTimeObject - The product release date and time object.
+ * @property {string} imageUrl - The product image url.
+ */
+
+/**
+ * Retrieves and aggregates release data from multiple channels, deduplicates them by SKU, sorts them by the dateTimeObject in ascending order and sends it in the response.
+ * @param {express.Request} request - Express request object which includes query parameters.
+ * @param {express.Response} response - Express response object used to send back the data.
+ * @param {function} next - Express next middleware function.
+ * @returns {releaseData[]} An array of release data, deduplicated and sorted.
+ * @throws {errorMessage} Missing required query parameters or unsupported country code.
+ */
 router.get("/", async (request, response, next) => {
   try {
     const { country, timeZone } = request.query;
@@ -27,7 +55,7 @@ router.get("/", async (request, response, next) => {
     }
 
     data = uniqBy(data, (data) => data.sku);
-    data = sortBy(data, "dateTimeObject");
+    data = sortBy(data, (data) => data.dateTimeObject);
 
     response.status(200).send(data);
   } catch (error) {
