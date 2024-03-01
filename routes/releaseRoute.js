@@ -1,7 +1,7 @@
 import express from "express";
 import NikeReleaseData from "../services/nike/releaseData.js";
 import { locales } from "../utilities/settings.js";
-import sortBy from "lodash.sortby";
+import orderBy from "lodash.orderby";
 import uniqBy from "lodash.uniqby";
 
 /** Creates an instance of the NikeReleaseData class to interact with Nike release data. */
@@ -55,7 +55,7 @@ router.get("/", async (request, response, next) => {
     }
 
     data = uniqBy(data, (data) => data.sku);
-    data = sortBy(data, (data) => data.dateTimeObject);
+    data = orderBy(data, ["dateTimeObject"]);
 
     response.status(200).send(data);
   } catch (error) {
