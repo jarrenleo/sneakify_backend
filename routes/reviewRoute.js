@@ -1,5 +1,5 @@
 import express from "express";
-import ReviewData from "../services/youtube/reviewData.js";
+import ReviewData from "../providers/youtube/reviewData.js";
 import { locales } from "../utilities/settings.js";
 
 /** Creates an instance of the ReviewData class to interact with Youtube data. */

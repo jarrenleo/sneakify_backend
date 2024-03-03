@@ -1,5 +1,5 @@
 import express from "express";
-import NikeMonitorData from "../services/nike/monitorData.js";
+import NikeMonitorData from "../providers/nike/monitorData.js";
 import { locales } from "../utilities/settings.js";
 import orderBy from "lodash.orderby";
 

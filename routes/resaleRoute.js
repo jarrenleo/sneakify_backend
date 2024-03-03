@@ -1,6 +1,6 @@
 import express from "express";
-import GoatPrice from "../services/goat/priceData.js";
-import SNKRDunkPrice from "../services/snkrdunk/priceData.js";
+import GoatPrice from "../providers/goat/priceData.js";
+import SNKRDunkPrice from "../providers/snkrdunk/priceData.js";
 import { locales } from "../utilities/settings.js";
 
 /** Creates an instance of the each marketplace class to interact with resale price data. */

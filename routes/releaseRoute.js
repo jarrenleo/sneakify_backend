@@ -1,5 +1,5 @@
 import express from "express";
-import NikeReleaseData from "../services/nike/releaseData.js";
+import NikeReleaseData from "../providers/nike/releaseData.js";
 import { locales } from "../utilities/settings.js";
 import orderBy from "lodash.orderby";
 import uniqBy from "lodash.uniqby";

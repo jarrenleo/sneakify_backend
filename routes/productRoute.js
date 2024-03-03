@@ -1,5 +1,5 @@
 import express from "express";
-import NikeProductData from "../services/nike/productData.js";
+import NikeProductData from "../providers/nike/productData.js";
 import { locales } from "../utilities/settings.js";
 
 /** Creates an instance of the NikeProductData class to interact with Nike product data. */
